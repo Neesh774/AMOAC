@@ -10,7 +10,7 @@ term_names = []
 
 
 def get_passage_string(p):
-    string = str(p.get_text()).strip().replace(
+    string = str(p.get_text(" ", strip=True)).replace(
         u'\xa0', u' ').replace("\n", "").replace('\t', "").replace("  ", "")
     if not string:
         string = "".join(p.strings).replace(u'\xa0', u' ').strip()
