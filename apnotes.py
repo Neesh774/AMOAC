@@ -80,7 +80,7 @@ for chapter_num in range(1, 41, 1):
             bolded = p.find_all("b")
             for bold in bolded:
                 term = get_passage_string(bold)
-                if not term[0:4].isnumeric() and re.compile("[0-9%]+").fullmatch(term) is None and len(term) > 0:
+                if term not in term_names and not term[0:4].isnumeric() and re.compile("[0-9%]+").fullmatch(term) is None and len(term) > 0:
                     term_names.append(term)
                     term_names = list(set(term_names))
                     terms.append({
@@ -94,3 +94,7 @@ for chapter_num in range(1, 41, 1):
     chapters.append(chapter)
 file.write(json.dumps(chapters))
 file.close()
+print("-" * 20)
+print("Finished!")
+print('Counted ' + str(len(term_names)) + " terms")
+print('Counted ' + str(len(people_names)) + " people")
