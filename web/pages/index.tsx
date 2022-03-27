@@ -49,7 +49,6 @@ export async function getStaticProps() {
         chapter: p.chapter,
       })),
     };
-    console.log(chapter.chapterNum);
     return chapter;
   });
   return {
