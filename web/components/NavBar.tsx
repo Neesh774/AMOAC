@@ -33,9 +33,9 @@ export default function Nav() {
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+        <Flex h={12} alignItems={"center"} justifyContent={"space-between"}>
           <Box>
-            <Heading as="h3" size="lg">
+            <Heading as="h3" size="md">
               AMOAC Notes
             </Heading>
           </Box>
