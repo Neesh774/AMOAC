@@ -65,6 +65,7 @@ for chapter_num in range(1, 41, 1):
                     colstrings = cols.pop(0).stripped_strings
                     table_data[key].append('\n'.join(list(colstrings)))
             chapter_sections[-1]['table'] = table_data
+            chapter_sections[-1].pop('text')
             continue
 
         if(not 'title' in cur_section.keys() and (p.b or p.strong) and len(p.contents) == 1):
@@ -86,7 +87,7 @@ for chapter_num in range(1, 41, 1):
                     people_names = list(
                         set(people_names))
                     people.append({
-                        "name": name,
+                        "name": name.strip(),
                         "chapter": chapter_num,
                         "passage": string
                     })
@@ -98,7 +99,7 @@ for chapter_num in range(1, 41, 1):
                     term_names.append(term)
                     term_names = list(set(term_names))
                     terms.append({
-                        "name": term,
+                        "name": term.strip(),
                         "chapter": chapter_num,
                         "passage": string
                     })

@@ -154,18 +154,16 @@ const SidebarContent = ({
       <Text ml="4" fontSize="xl" fontWeight="bold" color="red.400">
         Chapters
       </Text>
-      <List>
-        {items.map((link) => (
-          <NavItem
-            key={link.name}
-            chapter={link.chapter}
-            currentChapter={chapterProps.chapter}
-            setChapter={chapterProps.setChapter}
-          >
-            {link.name}
-          </NavItem>
-        ))}
-      </List>
+      {items.map((link) => (
+        <NavItem
+          key={link.name}
+          chapter={link.chapter}
+          currentChapter={chapterProps.chapter}
+          setChapter={chapterProps.setChapter}
+        >
+          {link.name}
+        </NavItem>
+      ))}
     </Box>
   );
 };
@@ -178,29 +176,39 @@ const NavItem = ({
   ...rest
 }) => {
   return (
-    <ListItem p={1} ml="6">
-      <Flex
-        align="left"
-        p={1}
-        mr="4"
-        borderRadius="lg"
-        role="group"
-        cursor="pointer"
-        _hover={{
-          bg: useColorModeValue("gray.100", "gray.700"),
-        }}
-        fontWeight={chapter + 1 === currentChapter ? "bold" : "normal"}
+    <Flex
+      align="left"
+      p={1}
+      mx="4"
+      borderRadius="lg"
+      role="group"
+      cursor="pointer"
+      gap={2}
+      alignItems="center"
+      _hover={{
+        bg: useColorModeValue("gray.100", "gray.700"),
+      }}
+      fontWeight={chapter + 1 === currentChapter ? "bold" : "normal"}
+      color={
+        currentChapter === chapter + 1
+          ? useColorModeValue("red.500", "red.400")
+          : useColorModeValue("gray.600", "gray.400")
+      }
+      {...rest}
+      onClick={() => setChapter(chapter + 1)}
+    >
+      <Text
+        fontWeight="bold"
         color={
           currentChapter === chapter + 1
-            ? useColorModeValue("red.500", "red.400")
-            : useColorModeValue("gray.600", "gray.400")
+            ? useColorModeValue("red.400", "red.300")
+            : useColorModeValue("gray.500", "gray.600")
         }
-        {...rest}
-        onClick={() => setChapter(chapter + 1)}
       >
-        {children}
-      </Flex>
-    </ListItem>
+        {chapter + 1}
+      </Text>
+      {children}
+    </Flex>
   );
 };
 

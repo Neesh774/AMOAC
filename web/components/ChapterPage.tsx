@@ -2,7 +2,6 @@ import { Chapter } from "../types";
 import {
   Box,
   Heading,
-  SimpleGrid,
   Text,
   TableContainer,
   Table,
@@ -13,35 +12,42 @@ import {
   Tbody,
   useColorModeValue,
 } from "@chakra-ui/react";
+import Head from "next/head";
+
 export default function ChapterPage({ chapter }: { chapter: Chapter }) {
   return (
     <Box maxWidth="90%" marginLeft={8} paddingTop={10} paddingBottom={20}>
+      <Head>
+        <title>{chapter.title} | AMOAC</title>
+        <meta property="og:title" content="My page title" key="title" />
+      </Head>
       <Heading size="xl" color="red.500">
         {chapter.title}
       </Heading>
       {chapter.sections.map((s, i) => {
         if (!s.isTable) {
-          let text = <Text>{s.text}</Text>;
-          chapter.terms.filter((t) => t.chapter == i + 1).forEach((t) => {});
+          let text = s.text;
+          chapter.terms
+            .filter((t) => t.chapter == i + 1)
+            .forEach((t) => {
+              text = text.replace(t.name, `<b>${t.name}</b>`);
+              console.log(text.includes(t.name));
+            });
           return (
             <Box marginY={4}>
               {s.title != "Text" && (
-                <Heading size="md" color={"red.400"} marginBottom={1}>
+                <Heading size="md" color="red.400" marginBottom={1}>
                   {s.title}
                 </Heading>
               )}
-              <Text>{s.text}</Text>
+              <Text dangerouslySetInnerHTML={{ __html: text }} />
             </Box>
           );
         } else {
           return (
             <Box marginY={4}>
               {s.title != "Text" && (
-                <Heading
-                  size="md"
-                  color={useColorModeValue("gray.700", "gray.200")}
-                  marginBottom={1}
-                >
+                <Heading size="md" color="red.400" marginBottom={1}>
                   {s.title}
                 </Heading>
               )}
