@@ -183,7 +183,6 @@ const NavItem = ({
       borderRadius="lg"
       role="group"
       cursor="pointer"
-      gap={2}
       alignItems="center"
       _hover={{
         bg: useColorModeValue("gray.100", "gray.700"),
@@ -199,6 +198,7 @@ const NavItem = ({
     >
       <Text
         fontWeight="bold"
+        mr={3}
         color={
           currentChapter === chapter + 1
             ? useColorModeValue("red.400", "red.300")
