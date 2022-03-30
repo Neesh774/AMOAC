@@ -1,12 +1,24 @@
-import { Flex, Heading, Button, useColorModeValue } from "@chakra-ui/react";
+import {
+  Flex,
+  Heading,
+  Button,
+  useColorModeValue,
+  Text,
+  Icon,
+} from "@chakra-ui/react";
 import { Chapter } from "../types";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import Link from "next/link";
+import ChapterContext from "../ChapterContext";
+import { useRouter } from "next/router";
+import { useContext } from "react";
+import { User, PageStar } from "iconoir-react";
 export default function ChapterDisplay({ chapter }: { chapter: Chapter }) {
+  const { setChapter } = useContext(ChapterContext);
+  const router = useRouter();
   return (
     <Flex
       borderRadius="lg"
-      backgroundColor={useColorModeValue("gray.100", "blue.900")}
+      backgroundColor={useColorModeValue("gray.200", "blue.900")}
       paddingX={4}
       paddingY={4}
       flexDirection="column"
@@ -14,39 +26,54 @@ export default function ChapterDisplay({ chapter }: { chapter: Chapter }) {
     >
       <Flex flexDirection="column" height="100%">
         <Heading size="sm" color={useColorModeValue("gray.500", "gray.300")}>
-          Chapter {chapter.chapterNum}
+          Chapter {chapter.chapter_number}
         </Heading>
         <Heading size="md">{chapter.title}</Heading>
       </Flex>
       <Flex gap={4} flexDirection="column">
         <Flex gap={4}>
           {chapter.terms.length > 0 && (
-            <Link href={`/chapter/${chapter.chapterNum}#terms`} passHref>
-              <Button
+            <Flex>
+              <Text
                 color={useColorModeValue("gray.600", "gray.300")}
-                variant="link"
-                rightIcon={<ChevronRightIcon />}
+                marginRight={1}
+              >
+                <PageStar strokeWidth={2.5} width="1.3em" height="1.3em" />
+              </Text>
+              <Text
+                color={useColorModeValue("gray.600", "gray.300")}
+                fontWeight="bold"
               >
                 {chapter.terms.length} Terms
-              </Button>
-            </Link>
+              </Text>
+            </Flex>
           )}
           {chapter.people.length > 0 && (
-            <Link href={`/chapter/${chapter.chapterNum}#people`} passHref>
-              <Button
+            <Flex>
+              <Text
                 color={useColorModeValue("gray.600", "gray.300")}
-                variant="link"
-                rightIcon={<ChevronRightIcon />}
+                marginRight={1}
+              >
+                <User strokeWidth={2.5} width="1.3em" height="1.3em" />
+              </Text>
+              <Text
+                color={useColorModeValue("gray.600", "gray.300")}
+                fontWeight="bold"
               >
                 {chapter.people.length} People
-              </Button>
-            </Link>
+              </Text>
+            </Flex>
           )}
         </Flex>
         <Flex>
-          <Link href={`/chapter/${chapter.chapterNum}`} passHref>
-            <Button colorScheme="blue">View Chapter</Button>
-          </Link>
+          <Button
+            colorScheme="blue"
+            onClick={() => {
+              setChapter(chapter.chapter_number);
+            }}
+          >
+            View Chapter
+          </Button>
         </Flex>
       </Flex>
     </Flex>

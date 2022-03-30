@@ -1,0 +1,28 @@
+.flashcard {
+  background-color: transparent;
+  perspective: 1000px;
+}
+
+.flashcard_inner {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip {
+  transform: rotateY(180deg);
+}
+
+.fc_front,
+.fc_back {
+  position: absolute;
+  width: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+.fc_back {
+  transform: rotateY(180deg);
+}

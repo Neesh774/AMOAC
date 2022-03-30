@@ -1,29 +1,34 @@
-import Nav from "../components/NavBar";
-import { SimpleGrid } from "@chakra-ui/react";
+import {
+  SimpleGrid,
+  Box,
+  useColorModeValue,
+  Heading,
+  Flex,
+} from "@chakra-ui/react";
 import BookNotes from "../notes/Book17.json";
 import { Chapter } from "../types";
 import Head from "next/head";
-import ChapterDisplay from "../components/ChapterDisplay";
-export default function Home({ notes }: { notes: Chapter[] }) {
+import { createContext, useState } from "react";
+import Home from "../components/Home";
+import ChapterPage from "../components/ChapterPage";
+import ChapterContext from "../ChapterContext";
+import Sidebar from "../components/SideBar";
+
+export default function HomePage({ notes }: { notes: Chapter[] }) {
+  const [chapter, setChapter] = useState(-1);
   return (
-    <div>
+    <ChapterContext.Provider value={{ chapter, setChapter }}>
       <Head>
         <title>AMOAC Notes</title>
       </Head>
-      <Nav />
-      <SimpleGrid
-        maxWidth="80%"
-        marginY={10}
-        minChildWidth={["70%", null, "40%", null, "30%", "20%"]}
-        columnGap={3}
-        rowGap={5}
-        marginX="auto"
-      >
-        {notes.map((c, i) => (
-          <ChapterDisplay key={i} chapter={c} />
-        ))}
-      </SimpleGrid>
-    </div>
+      <Sidebar titles={notes.map((n) => n.title)}>
+        {chapter == -1 ? (
+          <Home notes={notes} />
+        ) : (
+          <ChapterPage chapter={notes[chapter - 1]} />
+        )}
+      </Sidebar>
+    </ChapterContext.Provider>
   );
 }
 
@@ -31,13 +36,26 @@ export async function getStaticProps() {
   const notes = BookNotes.map((bn) => {
     const chapter: Chapter = {
       title: bn.title,
-      chapterNum: bn.chapter_number,
-      startDate: bn.start_date,
-      endDate: bn.end_date,
-      sections: bn.sections.map((s) => ({
-        title: s.title ?? "Text",
-        text: s.text,
-      })),
+      chapter_number: bn.chapter_number,
+      start_date: bn.start_date,
+      end_date: bn.end_date,
+      sections: bn.sections.map((s) => {
+        if (s.text) {
+          return {
+            text: s.text as string,
+            title: s.title ?? "Text",
+            isTable: false,
+            table: {},
+          };
+        } else if (s.table) {
+          return {
+            text: "",
+            table: s.table as Object,
+            title: s.title ?? "Text",
+            isTable: true,
+          };
+        }
+      }),
       terms: bn.terms.map((t) => ({
         name: t.name,
         passage: t.passage,

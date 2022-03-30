@@ -2,7 +2,7 @@ import requests
 import re
 import json
 from bs4 import BeautifulSoup
-file = open("apnotes.json", "w")
+file = open("web/notes/Book17.json", "w")
 
 chapters = []
 people_names = []
@@ -10,10 +10,7 @@ term_names = []
 
 
 def get_passage_string(p):
-    string = str(p.get_text(" ", strip=True)).replace(
-        u'\xa0', u' ').replace("\n", "").replace('\t', "").replace("  ", "")
-    if not string:
-        string = "".join(p.strings).replace(u'\xa0', u' ').strip()
+    string = str(p.get_text()).replace("  ", "")
     return string
 
 
@@ -23,7 +20,8 @@ for chapter_num in range(1, 41, 1):
     page = BeautifulSoup(page.content, "html.parser")
     notes = page.find(id="content")
     print('Scanning chapter ' + str(chapter_num))
-    paragraphs = notes.find_all('p')
+    notes.p.append("")
+    paragraphs = notes.find_all('p') + notes.find_all('table')
     paragraphs.pop(0)
     if(not str(paragraphs[0].string)[0].isdigit()):
         print(paragraphs[0].string)
@@ -46,23 +44,39 @@ for chapter_num in range(1, 41, 1):
     cur_section = {}
     for p in paragraphs:
         string = get_passage_string(p)
-
-        # new line or table
-        if(len(string) == 0 and not p.table):
-            if('text' in cur_section.keys()):
-                chapter_sections.append(cur_section)
+        # new line
+        if(len(string) == 1):
+            chapter_sections.append(cur_section)
             cur_section = {}
             continue
         # title
-        elif(not 'title' in cur_section.keys() and (p.b or p.strong) and len(p.contents) == 1):
+        if(p.find('tr') and len(p.find('tr')) > 1):
+            table_data = {}
+            rows = p.find_all("tr")
+            header = rows.pop(0)
+            for b in header.find_all("b"):
+                table_data[b.get_text()] = []
+            if(len(table_data) == 0):
+                table_data["Time"] = []
+                table_data["Event"] = []
+            for row in rows:
+                cols = row.find_all("p")
+                for key in table_data:
+                    colstrings = cols.pop(0).stripped_strings
+                    table_data[key].append('\n'.join(list(colstrings)))
+            chapter_sections[-1]['table'] = table_data
+            continue
+
+        if(not 'title' in cur_section.keys() and (p.b or p.strong) and len(p.contents) == 1):
             cur_section['title'] = string.replace("\n", "")
             continue
+
         # normal text
+
+        if('text' in cur_section.keys()):
+            cur_section['text'] = cur_section['text'] + '\n' + string
         else:
-            if('text' in cur_section.keys()):
-                cur_section['text'] = cur_section['text'] + '\n' + string
-            else:
-                cur_section['text'] = string
+            cur_section['text'] = string
             # checking for people and terms
             underlined = p.find_all("u")
             for person in underlined:
@@ -88,6 +102,8 @@ for chapter_num in range(1, 41, 1):
                         "chapter": chapter_num,
                         "passage": string
                     })
+            continue
+
     chapter['sections'] = chapter_sections
     chapter['terms'] = terms
     chapter['people'] = people

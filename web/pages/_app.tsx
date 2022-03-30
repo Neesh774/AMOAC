@@ -1,5 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
-
+import "../flashcard.css";
 function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider>
