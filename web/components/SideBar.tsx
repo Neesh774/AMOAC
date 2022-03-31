@@ -16,8 +16,9 @@ import {
   ListItem,
   List,
   useColorMode,
+  Button,
 } from "@chakra-ui/react";
-import { Home, Menu, HalfMoon, SunLight } from "iconoir-react";
+import { Home, Menu, HalfMoon, SunLight, Twitter, GitHub } from "iconoir-react";
 import ChapterContext from "../ChapterContext";
 
 type Link = {
@@ -164,6 +165,42 @@ const SidebarContent = ({
           {link.name}
         </NavItem>
       ))}
+      <Flex
+        flexDirection="column"
+        color={useColorModeValue("gray.600", "gray.500")}
+        justifyContent="center"
+        alignItems="center"
+        marginX={4}
+        fontSize="sm"
+        mt={4}
+      >
+        <Text>
+          All the notes on this website were originally hosted on{" "}
+          <Link
+            textDecoration="underline"
+            _hover={{ color: "red.400" }}
+            href="https://apnotes.net"
+          >
+            AP Notes
+          </Link>
+          . I do not take credit for any of the content.
+        </Text>
+        <Flex gap={2} mt={2}>
+          <Link
+            _hover={{ color: "red.400" }}
+            href="https://twitter.com/Neesh774"
+          >
+            <Twitter />
+          </Link>
+          <Link
+            textDecoration="underline"
+            _hover={{ color: "red.400" }}
+            href="https://github.com/Neesh774/apushmeoffacliff"
+          >
+            <GitHub />
+          </Link>
+        </Flex>
+      </Flex>
     </Box>
   );
 };
