@@ -1,4 +1,4 @@
-import { Chapter } from "../types";
+import { Chapter, Section } from "../types";
 import {
   Box,
   Heading,
@@ -10,11 +10,28 @@ import {
   Td,
   Thead,
   Tbody,
-  useColorModeValue,
+  useColorMode,
 } from "@chakra-ui/react";
 import Head from "next/head";
 
 export default function ChapterPage({ chapter }: { chapter: Chapter }) {
+  const { colorMode } = useColorMode();
+  const boldTerms = (section: Section, curChapter: number) => {
+    let text = section.text;
+    chapter.terms.forEach((t) => {
+      text = text.replace(
+        t.name,
+        `<b style="color: ${
+          colorMode == "dark"
+            ? "var(--chakra-colors-orange-300)"
+            : "var(--chakra-colors-orange-400)"
+        };">${t.name}</b>`
+      );
+    });
+    return {
+      __html: text,
+    };
+  };
   return (
     <Box maxWidth="90%" marginLeft={8} paddingTop={10} paddingBottom={20}>
       <Head>
@@ -26,13 +43,6 @@ export default function ChapterPage({ chapter }: { chapter: Chapter }) {
       </Heading>
       {chapter.sections.map((s, i) => {
         if (!s.isTable) {
-          let text = s.text;
-          chapter.terms
-            .filter((t) => t.chapter == i + 1)
-            .forEach((t) => {
-              text = text.replace(t.name, `<b>${t.name}</b>`);
-              console.log(text.includes(t.name));
-            });
           return (
             <Box marginY={4}>
               {s.title != "Text" && (
@@ -40,7 +50,7 @@ export default function ChapterPage({ chapter }: { chapter: Chapter }) {
                   {s.title}
                 </Heading>
               )}
-              <Text dangerouslySetInnerHTML={{ __html: text }} />
+              <Text dangerouslySetInnerHTML={boldTerms(s, i + 1)} />
             </Box>
           );
         } else {
