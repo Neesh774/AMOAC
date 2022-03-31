@@ -127,6 +127,7 @@ const SidebarContent = ({
         }}
         onClick={() => {
           chapterProps.setChapter(-1);
+          router.push("/");
         }}
       >
         <Icon mr="4" fontSize="16" as={Home} color="red.400" />
