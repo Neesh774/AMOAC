@@ -8,14 +8,19 @@ import {
 import BookNotes from "../notes/Book17.json";
 import { Chapter } from "../types";
 import Head from "next/head";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Home from "../components/Home";
 import ChapterPage from "../components/ChapterPage";
 import ChapterContext from "../ChapterContext";
 import Sidebar from "../components/SideBar";
+import { useRouter } from "next/router";
 
 export default function HomePage({ notes }: { notes: Chapter[] }) {
+  const router = useRouter();
   const [chapter, setChapter] = useState(-1);
+  useEffect(() => {
+    setChapter(router.query.c ? parseInt(router.query.c as string) : -1);
+  }, [router]);
   return (
     <ChapterContext.Provider value={{ chapter, setChapter }}>
       <Head>

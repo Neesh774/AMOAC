@@ -16,7 +16,7 @@ import Head from "next/head";
 
 export default function ChapterPage({ chapter }: { chapter: Chapter }) {
   const { colorMode } = useColorMode();
-  const boldTerms = (section: Section, curChapter: number) => {
+  const formatText = (section: Section, curChapter: number) => {
     let text = section.text;
     chapter.terms.forEach((t) => {
       text = text.replace(
@@ -28,12 +28,23 @@ export default function ChapterPage({ chapter }: { chapter: Chapter }) {
         };">${t.name}</b>`
       );
     });
+    chapter.people.forEach((p) => {
+      text = text.replace(
+        p.name,
+        `<u style="color: ${
+          colorMode == "dark"
+            ? "var(--chakra-colors-green-300)"
+            : "var(--chakra-colors-green-400)"
+        };">${p.name}</u>`
+      );
+    });
     return {
       __html: text,
     };
   };
+
   return (
-    <Box maxWidth="90%" marginLeft={8} paddingTop={10} paddingBottom={20}>
+    <Box maxWidth="90%" marginLeft={[2, 8]} paddingTop={10} paddingBottom={20}>
       <Head>
         <title>{chapter.title} | AMOAC</title>
         <meta property="og:title" content="My page title" key="title" />
@@ -50,7 +61,7 @@ export default function ChapterPage({ chapter }: { chapter: Chapter }) {
                   {s.title}
                 </Heading>
               )}
-              <Text dangerouslySetInnerHTML={boldTerms(s, i + 1)} />
+              <Text dangerouslySetInnerHTML={formatText(s, i + 1)} />
             </Box>
           );
         } else {

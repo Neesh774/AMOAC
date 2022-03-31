@@ -11,7 +11,7 @@ import { ChevronRightIcon } from "@chakra-ui/icons";
 import ChapterContext from "../ChapterContext";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { User, PageStar } from "iconoir-react";
+import { User, StarOutline, ReportColumns } from "iconoir-react";
 export default function ChapterDisplay({ chapter }: { chapter: Chapter }) {
   const { setChapter } = useContext(ChapterContext);
   const router = useRouter();
@@ -25,9 +25,15 @@ export default function ChapterDisplay({ chapter }: { chapter: Chapter }) {
       gap={4}
     >
       <Flex flexDirection="column" height="100%">
-        <Heading size="sm" color={useColorModeValue("gray.500", "gray.300")}>
-          Chapter {chapter.chapter_number}
-        </Heading>
+        <Flex gap={2} alignItems="center">
+          <Heading size="sm" color={useColorModeValue("gray.500", "gray.300")}>
+            Chapter {chapter.chapter_number}
+          </Heading>
+          <Text>&bull;</Text>
+          <Heading size="sm" color={useColorModeValue("gray.500", "gray.300")}>
+            {chapter.sections.length} Sections
+          </Heading>
+        </Flex>
         <Heading size="md">{chapter.title}</Heading>
       </Flex>
       <Flex gap={4} flexDirection="column">
@@ -38,7 +44,7 @@ export default function ChapterDisplay({ chapter }: { chapter: Chapter }) {
                 color={useColorModeValue("gray.600", "gray.300")}
                 marginRight={1}
               >
-                <PageStar strokeWidth={2.5} width="1.3em" height="1.3em" />
+                <StarOutline strokeWidth={2.5} width="1.3em" height="1.3em" />
               </Text>
               <Text
                 color={useColorModeValue("gray.600", "gray.300")}
@@ -70,6 +76,7 @@ export default function ChapterDisplay({ chapter }: { chapter: Chapter }) {
             colorScheme="blue"
             onClick={() => {
               setChapter(chapter.chapter_number);
+              router.push("/?c=" + chapter.chapter_number);
             }}
           >
             View Chapter

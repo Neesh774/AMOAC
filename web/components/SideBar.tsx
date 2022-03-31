@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { Home, Menu, HalfMoon, SunLight, Twitter, GitHub } from "iconoir-react";
 import ChapterContext from "../ChapterContext";
+import { useRouter } from "next/router";
 
 type Link = {
   name: string;
@@ -94,6 +95,7 @@ const SidebarContent = ({
   onClose,
   ...rest
 }: SidebarProps) => {
+  const router = useRouter();
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Box
@@ -123,7 +125,9 @@ const SidebarContent = ({
         _hover={{
           bg: useColorModeValue("gray.100", "gray.700"),
         }}
-        onClick={() => chapterProps.setChapter(-1)}
+        onClick={() => {
+          chapterProps.setChapter(-1);
+        }}
       >
         <Icon mr="4" fontSize="16" as={Home} color="red.400" />
         Home
@@ -212,6 +216,7 @@ const NavItem = ({
   setChapter,
   ...rest
 }) => {
+  const router = useRouter();
   return (
     <Flex
       align="left"
@@ -231,7 +236,10 @@ const NavItem = ({
           : useColorModeValue("gray.600", "gray.400")
       }
       {...rest}
-      onClick={() => setChapter(chapter + 1)}
+      onClick={() => {
+        router.push("/?c=" + (chapter + 1));
+        setChapter(chapter + 1);
+      }}
     >
       <Text
         fontWeight="bold"
@@ -257,7 +265,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     <Flex
       ml={{ base: 0, md: 72 }}
       px={{ base: 4, md: 24 }}
-      height="20"
+      height="12"
       alignItems="center"
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
@@ -269,11 +277,13 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         variant="outline"
         onClick={onOpen}
         aria-label="open menu"
-        icon={<Menu />}
+        icon={<Menu width={16} height={16} />}
+        height={8}
+        width={8}
       />
 
-      <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        Logo
+      <Text fontSize="xl" ml="4" fontWeight="bold">
+        AMOAC
       </Text>
     </Flex>
   );
